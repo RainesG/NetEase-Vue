@@ -1,8 +1,8 @@
 <template>
-  <div class="m-layer" v-show="true">
+  <div class="m-layer">
     <div class="title-bar">
       <div class="title">登录</div>
-      <div class="close"></div>
+      <div class="close" @click="hideThis()"></div>
     </div>
 
     <div class="login-content">
@@ -11,23 +11,37 @@
           <div class="u-wrap">
             <div class="u-main"></div>
           </div>
-          <button class="phone-login">手机号登录</button>
-          <button class="regist">注册</button>
+          <div class="btn">
+            <button class="phone-login">手机号登录</button>
+            <button class="regist">注册</button>
+          </div>
+          <div class="u-official-terms">
+            <input type="checkbox" placeholder="同意" />
+            <a href="#" target="_blank" style="color: #507daf">《服务条款》</a>
+            <a href="#" target="_blank" style="color: #507daf">《隐私政策》</a>
+            <a href="#" target="_blank" style="color: #507daf"
+              >《儿童隐私政策》</a
+            >
+          </div>
         </div>
 
         <div class="right">
           <div class="u-alt">
             <ul>
               <li>
+                <span class="wechat"></span>
                 <a>微信登录</a>
               </li>
               <li>
+                <span class="qq"></span>
                 <a>QQ登录</a>
               </li>
               <li>
+                <span class="weibo"></span>
                 <a>微博登录</a>
               </li>
               <li>
+                <span class="netease"></span>
                 <a>网易邮箱帐号登录</a>
               </li>
             </ul>
@@ -44,22 +58,45 @@
           <button>选择其他登录模式</button>
         </div>
       </div>
+      <div class="n-scan" @click="login_switch()"></div>
     </div>
   </div>
 </template>
 
 
 <script>
+import topbarVue from "./topbar.vue";
 export default {
   name: "login",
-  props: {
-    isShow: {},
-  },
+  props: {},
   methods: {
+    hideThis: function () {
+      console.log(topbarVue);
+    },
+
     login_switch() {
       console.log(document.getElementsByClassName("login-scan")[0].classList);
-      document.getElementsByClassName("login-scan")[0].classList += " hide";
-      document.getElementsByClassName("login-list")[0].classList.remove("hide");
+
+      if (
+        document
+          .getElementsByClassName("login-scan")[0]
+          .classList.toString()
+          .includes("hide")
+      ) {
+        document
+          .getElementsByClassName("login-scan")[0]
+          .classList.remove("hide");
+        document.getElementsByClassName("login-list")[0].classList += " hide";
+        document
+          .getElementsByClassName("login-list")[0]
+          .classList.remove("flex");
+      } else {
+        document.getElementsByClassName("login-scan")[0].classList += " hide";
+        document
+          .getElementsByClassName("login-list")[0]
+          .classList.remove("hide");
+        document.getElementsByClassName("login-list")[0].classList += " flex";
+      }
     },
   },
 };
@@ -67,7 +104,16 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-ul,li{
+.flex {
+  display: flex;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul,
+li {
   list-style: none;
 }
 
@@ -125,8 +171,11 @@ em {
   clear: both;
 }
 
-.login-content {
+.login-scan {
   padding: 38px 0 20px;
+}
+
+.login-content {
   box-sizing: border-box;
   border: 1px solid #878787;
   border-width: 0 1px 1px;
@@ -183,23 +232,88 @@ em {
 
 .login-list button {
   display: block;
-  width: 219px;
+  width: 220px;
   height: 31px;
   line-height: 31px;
-  color: #fff;
   border: none;
   outline: none;
+  margin: 5px auto;
+  border-radius: 0.3rem;
+}
+
+.phone-login {
   background: url(../assets/button2.png);
   background-position: right -385px;
-  margin: 0 auto;
+  color: #fff;
+}
+
+.regist {
+  background: url(../assets/button2.png);
+  background-position: right -59px;
+  color: #333;
+}
+
+.login-list .left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .login-list {
-  display: flex;
+  padding: 48px 0;
 }
 
-.login-list.left {
+.u-official-terms {
+  margin-top: 15px;
+  font-family: NotoSansHans-Regular;
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.4);
+  line-height: 15px;
+}
+
+.n-scan {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  right: 1px;
+  bottom: 1px;
+  background: url(../assets/qr_login_icon.png) no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+.u-alt span {
+  display: block;
+  width: 38px;
+  height: 38px;
+}
+
+.u-alt li {
   display: flex;
-  flex-direction: column;
+  font-size: 12px;
+  color: #333;
+  line-height: 38px;
+  text-indent: 20px;
+  margin-top: 10px;
+}
+
+.wechat {
+  background: url(../assets/logo.png) no-repeat;
+  background-position: -150px -670px;
+}
+
+.qq {
+  background: url(../assets/logo.png) no-repeat;
+  background-position: -190px -670px;
+}
+
+.weibo {
+  background: url(../assets/logo.png) no-repeat;
+  background-position: -231px -670px;
+}
+
+.netease {
+  background: url(../assets/logo.png) no-repeat;
+  background-position: -271px -670px;
 }
 </style>

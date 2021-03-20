@@ -1,13 +1,11 @@
 <template>
   <div id="app">
-    <topbar msg="Welcome to Your Vue.js App" />
-    <login/>
+    <topbar/>
   </div>
 </template>
 
 <script>
 import topbar from "./components/topbar.vue";
-import login from "./components/login.vue";
 
 export default {
   name: "App",
@@ -15,7 +13,6 @@ export default {
   },
   components: {
     topbar,
-    login,
   },
 };
 </script>

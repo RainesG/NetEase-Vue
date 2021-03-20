@@ -52,21 +52,35 @@
       <button class="create mr10"><a href="">创作者中心</a></button>
       <button class="login"><a href="#" @click="qr_login()">登录</a></button>
     </div>
+    <login class="login-part" v-show="show" />
   </div>
 </template>
 
 
 <script>
 import axios from "axios";
+import login from "./login";
 export default {
   name: "topbar",
-  props: {
-    isShow: {},
+  props: {},
+  data() {
+    return {
+      show: false,
+    };
+  },
+  components: {
+    login,
   },
   methods: {
     qr_login() {
-      // console.log(loginVue.isShow);
       // console.log("succes");
+      var that = this;
+      if ((that.show == false)) {
+        that.show = true;
+      }else{
+        that.show = false
+      }
+      console.log(that.show);
       axios.defaults.baseURL = "https://music.hzbiz.net/";
       var url = "login/qr/key?e=" + new Date();
       var params = {};
@@ -262,5 +276,15 @@ a:hover {
 
 .login a {
   text-decoration: #333;
+}
+
+.topbar {
+  position: relative;
+}
+
+.login-part {
+  position: absolute;
+  top: 100px;
+  margin: 0;
 }
 </style>
