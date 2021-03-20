@@ -1,18 +1,23 @@
 <template>
   <div id="app">
-    <topbar msg="Welcome to Your Vue.js App"/>
+    <topbar msg="Welcome to Your Vue.js App" />
+    <login/>
   </div>
 </template>
 
 <script>
-import topbar from './components/topbar.vue'
+import topbar from "./components/topbar.vue";
+import login from "./components/login.vue";
 
 export default {
-  name: 'App',
+  name: "App",
+  props:{
+  },
   components: {
-    topbar
-  }
-}
+    topbar,
+    login,
+  },
+};
 </script>
 
 <style>
@@ -21,8 +26,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  background-color: #242424;
   margin-top: 0;
 }
 </style>

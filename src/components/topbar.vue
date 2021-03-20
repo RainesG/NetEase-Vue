@@ -49,24 +49,102 @@
           placeholder="音乐/视频/电台/用户"
         />
       </div>
-      <button class="create mr10">创作者中心</button>
-      <button class="login"><a href="#">登录</a></button>
+      <button class="create mr10"><a href="">创作者中心</a></button>
+      <button class="login"><a href="#" @click="qr_login()">登录</a></button>
     </div>
   </div>
 </template>
 
+
 <script>
+import axios from "axios";
 export default {
   name: "topbar",
   props: {
-    msg: String,
+    isShow: {},
+  },
+  methods: {
+    qr_login() {
+      // console.log(loginVue.isShow);
+      // console.log("succes");
+      axios.defaults.baseURL = "https://music.hzbiz.net/";
+      var url = "login/qr/key?e=" + new Date();
+      var params = {};
+
+      // console.log('asd'+info);
+      axios
+        .post(url, params)
+        .then((res) => {
+          // console.log(res.data.data.unikey);
+
+          // Create Qr Code
+          var url = "login/qr/create?e=" + new Date();
+          var params = {
+            key: res.data.data.unikey,
+            qrimg: 1,
+          };
+
+          axios
+            .post(url, params)
+            .then((res) => {
+              // console.log(res.data.data.qrimg);
+              var qr = document.createElement("img");
+              qr.src = res.data.data.qrimg;
+              document.getElementsByClassName("qr")[0].append(qr);
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+
+          // check QrScanning status
+          function checkStatus(res) {
+            var url = "login/qr/check?e=" + new Date();
+            var params = {
+              key: res.data.data.unikey,
+            };
+
+            axios
+              .post(url, params)
+              .then((res) => {
+                // console.log(res.data.code);
+                if (res.data.code == "803") {
+                  clearInterval(timeId);
+
+                  var url = "login/refresh?e=" + new Date();
+                  axios
+                    .post(url)
+                    .then((res) => {
+                      console.log(res);
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                }
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+          }
+
+          const timeId = setInterval(() => {
+            checkStatus(res);
+            // console.log('turn');
+          }, 1000);
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.mr10{
+.mr10 {
   margin-right: 10px;
 }
 em {
@@ -80,18 +158,30 @@ ul {
   height: 100%;
 }
 
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
 a {
-  color: #fff;
+  color: #ccc;
   text-decoration: none;
 }
 
+a:hover {
+  color: #fff;
+}
+
 .list {
-  display: flex;
-  justify-content: space-evenly;
+  height: 70px;
+  margin: 0;
+}
+
+.list li:hover {
+  background-color: #000;
+}
+
+.list li {
+  display: inline-block;
+  padding: 0 20px;
+  line-height: 70px;
+  margin: 0;
+  position: relative;
 }
 
 .topbar {
@@ -106,6 +196,8 @@ a {
   background: #242424;
   border-bottom: 1px solid #000;
   align-items: center;
+  padding: 0;
+  height: 70px;
 }
 
 .r-topbar {
@@ -119,18 +211,13 @@ a {
   color: transparent;
 }
 
-.list li {
-  position: relative;
-  height: 100%;
-}
-
 .list li sup {
   display: block;
   width: 28px;
   height: 19px;
   position: absolute;
-  top: -5px;
-  left: 75px;
+  top: 21px;
+  left: 100px;
   background: url(../assets/topbar.png) no-repeat -190px 0;
 }
 
@@ -146,6 +233,10 @@ a {
   outline: none;
 }
 
+.srchbg input::focus {
+  color: rebeccapurple;
+}
+
 .create {
   width: 90px;
   height: 32px;
@@ -153,17 +244,23 @@ a {
   border: 1px solid #4f4f4f;
   background-position: 0 -140px;
   line-height: 32px;
-  color: #ccc;
   background-color: transparent;
   border-radius: 20px;
 }
 
-.login{
-  border: none;
-  background-color: transparent;
+.create:hover {
+  text-decoration: none;
+  border: 1px solid #ccc;
+  color: #fff;
 }
 
-.login a{
+.login {
+  border: none;
+  background-color: transparent;
+  outline: none;
+}
+
+.login a {
   text-decoration: #333;
 }
 </style>
