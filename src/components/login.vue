@@ -88,13 +88,12 @@
         <button @click="phone_login()">登录</button>
       </form>
     </div>
-
-    <main></main>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import $ from "jquery";
 
 export default {
   name: "login",
@@ -107,15 +106,17 @@ export default {
       pw: "",
     };
   },
-  component:{
-    carousel,
-  },
   watch: {
     showMask() {
       this.$emit("changeStause", this.isShow);
     },
   },
+
   methods: {
+    listShow() {
+      console.log("listShow");
+    },
+
     hideThis: function () {
       this.isShow = false;
       console.log(this.isShow);
@@ -173,7 +174,7 @@ export default {
     phone_login() {
       axios.defaults.baseURL = "https://music.hzbiz.net/";
 
-      console.log(this);
+      // console.log(this);
       var phone = this.phone;
       var pw = this.pw;
       var url = "login/cellphone";
@@ -187,25 +188,122 @@ export default {
         .then((res) => {
           console.log(res);
           axios.post(url, params).then((res) => {
-            console.log(res);
-            var avatar = document.createElement("img");
-            var img = document.getElementsByTagName("main");
-            img[0].append(avatar);
-            avatar.src = res.data.profile.avatarUrl;
-            console.log(res.data.profile.userId);
-          });
+            // console.log(res);
+            document.getElementsByClassName("m-layer")[0].classList += " hide";
+            var img = document.getElementsByClassName("avatar")[0];
+            img.src = res.data.profile.avatarUrl;
+            // console.log(res.data.profile.userId);
 
-          // login refresh
-          // var url = "login/refresh";
-          // var params = {};
-          // axios
-          //   .post(url)
-          //   .then((res) => {
-          //     console.log(res);
-          //   })
-          //   .catch((err) => {
-          //     console.error(err);
-          //   });
+            var songListUrl = "user/playlist";
+            var uId = {
+              uid: res.data.profile.userId,
+            };
+
+            axios
+              .post(songListUrl, uId)
+              .then((res) => {
+                // console.log(res.data.playlist);
+
+                for (let index = 0; index < res.data.playlist.length; index++) {
+                  var albumList = document.createElement("li");
+                  albumList.innerHTML = res.data.playlist[index].name;
+                  albumList.className = "aList";
+                  albumList.style.backgroundColor = "#336699";
+                  albumList.style.padding = "20px 50px";
+                  albumList.style.marginTop = "10px";
+                  albumList.style.cursor = "pointer";
+                  albumList.dataset.index = index;
+                  // albumList.setAttribute("v-on:click", "listShow()");
+
+                  document
+                    .getElementsByClassName("albumList")[0]
+                    .append(albumList);
+                  // console.log(albumList);
+                }
+
+                $(".aList").on("click", function (e) {
+                  var orderNum = this.getAttribute('data-index');
+                  console.log(this);
+                  var url = "playlist/detail";
+                  var params = {
+                    id: res.data.playlist[orderNum].id,
+                  };
+                  axios
+                    .post(url, params)
+                    .then((res) => {
+                      e.preventDefault();
+                      console.log(this);
+                      console.log(res.data);
+                      for (let index = 0; index < 20; index++) {
+                        var ids = res.data.playlist.trackIds[index].id;
+                        var url = "song/detail?ids=" + ids;
+
+                        axios
+                          .post(url)
+                          .then((res) => {
+                            // console.log(res);
+                            var songList = document.createElement("li");
+                            songList.innerHTML = res.data.songs[0].name;
+                            songList.className = "sList";
+                            songList.style.backgroundColor = "#336699";
+                            songList.style.padding = "5px 10px";
+                            songList.style.marginTop = "10px";
+                            songList.style.cursor = "pointer";
+                            document
+                              .getElementsByClassName("songList")[0]
+                              .append(songList);
+                          })
+                          .catch((err) => {
+                            console.error(err);
+                          });
+                      }
+
+                      // for (let key of res.data.playlist.trackIds) {
+                      //   console.log(key.id);
+
+                      //   var songList = document.createElement("li");
+                      //   songList.innerHTML = key.id;
+                      //   songList.className = "sList";
+                      //   songList.style.backgroundColor = "#336699";
+                      //   songList.style.padding = "5px 10px";
+                      //   songList.style.marginTop = "10px";
+                      //   songList.style.cursor = "pointer";
+                      //   document
+                      //     .getElementsByClassName("songList")[0]
+                      //     .append(songList);
+                      // }
+                      // console.log(typeof(res.data.playlist.trackIds));
+
+                      var sUrl = "song/url";
+                      var sParams = {
+                        id: res.data.playlist.trackIds[30].id,
+                      };
+
+                      axios
+                        .post(sUrl, sParams)
+                        .then((res) => {
+                          // console.log(res);
+                          var player = document
+                            .getElementsByClassName("playerContainer")[0]
+                            .getElementsByTagName("audio")[0];
+                          // console.log(player);
+                          player.src = res.data.data[0].url;
+                          player.controls = "control";
+                          // document.getElementsByClassName('playerContainer')[0].append(player);
+                        })
+                        .catch((err) => {
+                          console.error(err);
+                        });
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                    });
+                });
+              })
+              .catch((err) => {
+                console.error(err);
+              });
+          });
         })
         .catch((err) => {
           console.error(err);
@@ -213,56 +311,6 @@ export default {
     },
   },
 };
-
-
-Vue.component('carousel',{
-    data:{
-        slideList:[
-            {
-                "desc":"",
-                "image":"../assets/slideList1.jpg"
-            },
-                        {
-                "desc":"",
-                "image":"../assets/slideList2.jpg"
-            },
-                        {
-                "desc":"",
-                "image":"../assets/slideList3.jpg"
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-        ]
-    },
-
-    template:'<template><ul><li v-for="(list,index) in slideList" :key="index" v-show="index===currentIndex" @mouseenter="stop" @mouseleave="go"><img :src="list.image" alt="" /></li></ul></template>'
-});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -402,6 +450,7 @@ em {
   outline: none;
   margin: 5px auto;
   border-radius: 0.3rem;
+  cursor: pointer;
 }
 
 .phone-login {
@@ -522,5 +571,6 @@ form {
   border: none;
   border-radius: 0.3rem;
   color: white;
+  cursor: pointer;
 }
 </style>

@@ -1,18 +1,20 @@
 <template>
   <div id="app">
     <topbar />
-    <carousel />
+    <userDetail/>
   </div>
 </template>
 
 <script>
 import topbar from "./components/topbar.vue";
+import userDetail from "./components/userDetail.vue"
 
 export default {
   name: "App",
   props: {},
   components: {
     topbar,
+    userDetail
   },
 };
 </script>
