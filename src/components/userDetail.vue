@@ -88,8 +88,6 @@
         <button @click="phone_login()">登录</button>
       </form>
     </div>
-
-    <main></main>
   </div>
 </template>
 
@@ -103,12 +101,9 @@ export default {
   },
   data() {
     return {
-      phone: "",
-      pw: "",
-    };
-  },
-  component:{
-    carousel,
+      phone:'',
+      pw:''
+    }
   },
   watch: {
     showMask() {
@@ -194,18 +189,6 @@ export default {
             avatar.src = res.data.profile.avatarUrl;
             console.log(res.data.profile.userId);
           });
-
-          // login refresh
-          // var url = "login/refresh";
-          // var params = {};
-          // axios
-          //   .post(url)
-          //   .then((res) => {
-          //     console.log(res);
-          //   })
-          //   .catch((err) => {
-          //     console.error(err);
-          //   });
         })
         .catch((err) => {
           console.error(err);
@@ -213,56 +196,6 @@ export default {
     },
   },
 };
-
-
-Vue.component('carousel',{
-    data:{
-        slideList:[
-            {
-                "desc":"",
-                "image":"../assets/slideList1.jpg"
-            },
-                        {
-                "desc":"",
-                "image":"../assets/slideList2.jpg"
-            },
-                        {
-                "desc":"",
-                "image":"../assets/slideList3.jpg"
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-                        {
-                "desc":"",
-                "image":""
-            },
-        ]
-    },
-
-    template:'<template><ul><li v-for="(list,index) in slideList" :key="index" v-show="index===currentIndex" @mouseenter="stop" @mouseleave="go"><img :src="list.image" alt="" /></li></ul></template>'
-});
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

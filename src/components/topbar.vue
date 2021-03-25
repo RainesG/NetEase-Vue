@@ -31,7 +31,9 @@
       </li>
       <li>
         <span
-          ><a href="#"><em>下载客户端</em></a></span
+          ><a href="#"
+            ><em>下载客户端</em></a
+          ></span
         >
         <sup class="hot"></sup>
       </li>
@@ -50,9 +52,11 @@
         />
       </div>
       <button class="create mr10"><a href="">创作者中心</a></button>
-      <button class="login"><a href="#" @click="qr_login()">登录</a></button>
+      <button class="login">
+        <a href="#" @click="qr_login()">登录</a>
+      </button>
     </div>
-    <login class="login-part" v-show="show" />
+    <login class="login-part" :changeStatus='isShow' v-show="isShow"/>
   </div>
 </template>
 
@@ -62,25 +66,22 @@ import axios from "axios";
 import login from "./login";
 export default {
   name: "topbar",
-  props: {},
-  data() {
-    return {
-      show: false,
-    };
-  },
   components: {
     login,
   },
+  data() {
+    return {
+      isShow : false
+    }
+  },
   methods: {
+
     qr_login() {
+      this.isShow = !(this.isShow)
       // console.log("succes");
-      var that = this;
-      if ((that.show == false)) {
-        that.show = true;
-      }else{
-        that.show = false
-      }
-      console.log(that.show);
+      // var that = this;
+      //   console.log(this.isShow);
+      //   that.isShow = true
       axios.defaults.baseURL = "https://music.hzbiz.net/";
       var url = "login/qr/key?e=" + new Date();
       var params = {};
@@ -102,9 +103,8 @@ export default {
             .post(url, params)
             .then((res) => {
               // console.log(res.data.data.qrimg);
-              var qr = document.createElement("img");
+              var qr = document.getElementsByClassName("qrImg")[0];
               qr.src = res.data.data.qrimg;
-              document.getElementsByClassName("qr")[0].append(qr);
             })
             .catch((err) => {
               console.error(err);
@@ -124,9 +124,12 @@ export default {
                 if (res.data.code == "803") {
                   clearInterval(timeId);
 
-                  var url = "login/refresh?e=" + new Date();
+console.log(res);
+                  console.log("success");
+                  var url = "login/refresh";
+                  var params = {};
                   axios
-                    .post(url)
+                    .post(url, params)
                     .then((res) => {
                       console.log(res);
                     })

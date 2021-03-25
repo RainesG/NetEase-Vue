@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <topbar/>
+    <topbar />
+    <carousel />
   </div>
 </template>
 
@@ -9,8 +10,7 @@ import topbar from "./components/topbar.vue";
 
 export default {
   name: "App",
-  props:{
-  },
+  props: {},
   components: {
     topbar,
   },
@@ -24,5 +24,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   margin-top: 0;
+  background-color: #242424;
+  border-bottom: 1px solid #000;
 }
 </style>

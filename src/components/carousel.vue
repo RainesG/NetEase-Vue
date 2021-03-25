@@ -1,0 +1,54 @@
+Vue.component('carousel',{
+    data:{
+        slideList:[
+            {
+                "desc":"",
+                "image":"../assets/slideList1.jpg"
+            },
+                        {
+                "desc":"",
+                "image":"../assets/slideList2.jpg"
+            },
+                        {
+                "desc":"",
+                "image":"../assets/slideList3.jpg"
+            },
+                        {
+                "desc":"",
+                "image":""
+            },
+                        {
+                "desc":"",
+                "image":""
+            },
+                        {
+                "desc":"",
+                "image":""
+            },
+                        {
+                "desc":"",
+                "image":""
+            },
+                        {
+                "desc":"",
+                "image":""
+            },
+                        {
+                "desc":"",
+                "image":""
+            },
+                        {
+                "desc":"",
+                "image":""
+            },
+        ]
+    }
+
+    template:'<template>
+  <ul>
+    <li v-for="(list,index) in slideList" :key="index" v-show="index===currentIndex" @mouseenter="stop" @mouseleave="go">
+      <img :src="list.image" alt="" />
+    </li>
+  </ul>
+</template>'
+});
